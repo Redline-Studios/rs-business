@@ -17,16 +17,16 @@ Config.Minigame = {
 }
 
 -- BUSINESS CONFIGS --
-Config.Job = 'hotdog' -- Name of the job in 'qb-core > shared > jobs.lua'
+Config.Job = 'beanmachine' -- Name of the job in 'qb-core > shared > jobs.lua'
 Config.Business = {
-    Name = 'Some Random Ass Business', -- Blip Name / Business Name
+    Name = 'Bean Machine', -- Blip Name / Business Name
     AutoDuty = true, -- Players on/off duty auto changes when entering/leaving the polyzone
 
     -- Business Blip Info
     Blip = {
         coords = vector3(119.42, -1037.94, 29.28),
-        sprite = 1,
-        color = 1,
+        sprite = 106,
+        color = 31,
         size = 0.5,
     },
 
@@ -87,7 +87,7 @@ Config.Locations = {
             width = 0.8,
             length = 0.5,
             info = {
-                label = 'Drinks',
+                label = 'Bean Machine Drinks',
                 icon = 'fas fa-droplet',
             }
         }
@@ -99,7 +99,7 @@ Config.Locations = {
             width = 0.5,
             length = 1,
             info = {
-                label = 'Coffee',
+                label = 'Bean Machine Coffee',
                 icon = 'fas fa-mug-hot',
             }
         }
