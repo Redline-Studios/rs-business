@@ -25,8 +25,8 @@ Config.Business = {
     -- Business Blip Info
     Blip = {
         coords = vector3(119.42, -1037.94, 29.28),
-        sprite = 106,
-        color = 31,
+        sprite = 1,
+        color = 1,
         size = 0.5,
     },
 
@@ -68,6 +68,18 @@ Config.Locations = {
             }
         }
     },
+    ['Duty'] = {
+        [1] = {
+            coords = vector3(126.39, -1034.39, 29.28),
+            heading = 340,
+            width = 0.9,
+            length = 0.5,
+            info = {
+                label = 'On / Off Duty',
+                icon = 'fas fa-clock',
+            }
+        }
+    },
     ['Food'] = {
         [1] = {
             coords = vector3(121.53, -1038.43, 29.28),
@@ -87,7 +99,7 @@ Config.Locations = {
             width = 0.8,
             length = 0.5,
             info = {
-                label = 'Bean Machine Drinks',
+                label = 'Drinks',
                 icon = 'fas fa-droplet',
             }
         }
@@ -99,7 +111,7 @@ Config.Locations = {
             width = 0.5,
             length = 1,
             info = {
-                label = 'Bean Machine Coffee',
+                label = 'Coffee',
                 icon = 'fas fa-mug-hot',
             }
         }
@@ -119,60 +131,84 @@ Config.Locations = {
 }
 
 -- FOOD CONFIG --
-Config.Food = {  -- Set 'stress' to 0 for no stress relief
+Config.Food = {
     [1] = {
         Item = 'tosti', -- Oooh yeah, a grilled cheese
-        Emote = 'bbq',
+        CraftEmote = 'bbq', -- Emote used when making the item
+        UseEmote = 'burger', -- Emote used when using the item
+        UseTime = 5, -- How long you use the item for (set in seconds)
+        Hunger = 2, -- How much hunger it refills
         Required = {
             [1] = {
                 item = 'water_bottle',
                 amount = 2,
-                stress = 2
             },
         }
     }
 }
 
 -- DRINKS CONFIG --
-Config.Drinks = { -- Set 'stress' to 0 for no stress relief
+Config.Drinks = {
     [1] = {
         Item = 'water_bottle', -- Yeah, you make that water bottle...
-        Emote = 'handshake',
+        CraftEmote = 'handshake', -- Emote used when making the item
+        UseEmote = 'water', -- Emote used when using the item
+        UseTime = 5, -- How long you use the item for (set in seconds)
+        Thirst = 2, -- How much thirst it refills
         Required = {
             [1] = {
-                item = '',
+                item = 'water_bottle',
                 amount = 1,
-                stress = 2
             },
         }
     }
 }
 
 -- COFFEE CONFIG --
-Config.Coffee = { -- Set 'stress' to 0 for no stress relief
+Config.Speed = {
+    Multiplier = 1.1, -- How fast you run
+    Length = math.random(20, 30) -- How long you run fast for (Set in seconds)
+}
+Config.Coffee = {
     [1] = {
         Item = 'coffee',
-        Emote = 'handshake',
+        CraftEmote = 'handshake', -- Emote used when making the item
+        UseEmote = 'coffee', -- Emote used when using the item
+        UseTime = 5, -- How long you use the item for (set in seconds)
+        Thirst = 2, -- How much thirst it refills
         Required = {
             [1] = {
                 item = 'water_bottle',
                 amount = 1,
-                stress = 2
             },
         }
     }
 }
 
 -- ALCOHOL CONFIG --
-Config.Alcohol = { -- Set 'stress' to 0 for no stress relief
+Config.Drunk = {
+    Liquor = { -- Values for liquor
+        Min = 1, -- Slight Buzz
+        Max = 3, -- Riggity-Wrecked, my guy
+        Length = math.random(2, 3) -- How long you are drunk for, in minutes
+    },
+    Beer = { -- Values for beer
+        Min = 1, -- Slight Buzz
+        Max = 3, -- Riggity-Wrecked, my guy
+        Length = math.random(2, 3) -- How long you are drunk for, in minutes
+    }
+}
+Config.Alcohol = {
     [1] = {
         Item = 'vodka',
-        Emote = 'handshake',
+        CraftEmote = 'handshake', -- Emote used when making the item
+        UseEmote = 'drink', -- Emote used when using the item
+        UseTime = 5, -- How long you use the item for (set in seconds)
+        Thirst = 2, -- How much thirst it refills
         Required = {
             [1] = {
                 item = 'water_bottle',
                 amount = 1,
-                stress = 2
             },
         }
     }
