@@ -24,12 +24,12 @@ RegisterNetEvent('rs-'..Config.Job..':client:OpenFood', function()
     item.text = text
     item.icon = v.Item
     item.params = {
-        event = 'rs-'..Config.Job..':client:MakeFood',
+        event = 'rs-'..Config.Job..':client:MakeItem',
         args = {
             item = v.Item,
             itemID = k,
             required = v.Required,
-            emote = v.Emote
+            craftemote = v.CraftEmote
         }
     }
 
@@ -72,12 +72,12 @@ RegisterNetEvent('rs-'..Config.Job..':client:OpenDrinks', function()
     item.text = text
     item.icon = v.Item
     item.params = {
-        event = 'rs-'..Config.Job..':client:MakeDrink',
+        event = 'rs-'..Config.Job..':client:MakeItem',
         args = {
-            item = v.Item,
-            itemID = k,
-            required = v.Required,
-            emote = v.Emote
+          item = v.Item,
+          itemID = k,
+          required = v.Required,
+          craftemote = v.CraftEmote
         }
     }
 
@@ -120,12 +120,12 @@ RegisterNetEvent('rs-'..Config.Job..':client:OpenAlcohol', function()
     item.text = text
     item.icon = v.Item
     item.params = {
-        event = 'rs-'..Config.Job..':client:MakeAlcohol',
+        event = 'rs-'..Config.Job..':client:MakeItem',
         args = {
             item = v.Item,
             itemID = k,
             required = v.Required,
-            emote = v.Emote
+            craftemote = v.CraftEmote
         }
     }
 
@@ -142,4 +142,52 @@ RegisterNetEvent('rs-'..Config.Job..':client:OpenAlcohol', function()
     table.insert(AlcoholMenu, CloseMenu)
 
     exports['qb-menu']:openMenu(AlcoholMenu)
+end)
+
+RegisterNetEvent('rs-'..Config.Job..':client:OpenCoffee', function()
+  local text = ''
+  local CoffeeMenu = {}
+
+
+  local CoffeeMenu = {
+    {
+      header = 'Coffee Menu',
+      isMenuHeader = true,
+    },
+  }
+
+  for k, v in pairs(Config.Coffee) do
+    local item = {}
+    local text = ""
+
+    item.header = sharedItems[v.Item].label
+    for r,s in pairs(v.Required) do
+        text = text.. s.amount.."x "..sharedItems[s.item].label.."<br>"
+    end
+    item.header = sharedItems[v.Item].label
+    item.text = text
+    item.icon = v.Item
+    item.params = {
+        event = 'rs-'..Config.Job..':client:MakeItem',
+        args = {
+            item = v.Item,
+            itemID = k,
+            required = v.Required,
+            craftemote = v.CraftEmote
+        }
+    }
+
+    table.insert(CoffeeMenu, item)
+  end
+
+  local CloseMenu = {
+      header = 'Close Menu',
+      icon = 'fas fa-x',
+      params = {
+          event = 'qb-menu:closeMenu'
+      }
+  }
+  table.insert(CoffeeMenu, CloseMenu)
+
+  exports['qb-menu']:openMenu(CoffeeMenu)
 end)
