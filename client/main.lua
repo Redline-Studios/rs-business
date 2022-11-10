@@ -3,6 +3,7 @@ sharedItems = QBCore.Shared.Items
 local Player = QBCore.Functions.GetPlayerData()
 local PlayerJob = QBCore.Functions.GetPlayerData().job
 local onDuty = QBCore.Functions.GetPlayerData().job.onDuty
+local ZonesCreated = false
 local zonesTable = {} -- Table for food target zones
 
 -- FUNCTIONS --
@@ -19,7 +20,7 @@ end
 
 local function CreateBusinessZones()
     for k, v in pairs(Config.Locations) do
-        if k ~= 'Registers' then
+        if k ~= 'Registers' and k ~= 'Duty' then
             for r, s in pairs(Config.Locations[k]) do
                 BusinessZone = exports['qb-target']:AddBoxZone(Config.Job..k..r, s.coords, s.length, s.width, {
                     name = Config.Job..k..r,
@@ -42,7 +43,7 @@ local function CreateBusinessZones()
 
                 table.insert(BusinessZone, zonesTable)
             end
-        else
+        elseif k == 'Registers' then
             for r, s in pairs(Config.Locations['Registers']) do
                 RegistersZones = exports['qb-target']:AddBoxZone('Register '..Config.Job..r, s.coords, s.length, s.width, {
                     name = 'Register '..Config.Job..r,
@@ -65,6 +66,31 @@ local function CreateBusinessZones()
             end
 
             table.insert(RegistersZones, zonesTable)
+
+        elseif k == 'Duty' then
+            for r, s in pairs(Config.Locations['Duty']) do
+                DutyZones = exports['qb-target']:AddBoxZone('Duty '..Config.Job..r, s.coords, s.length, s.width, {
+                    name = 'Duty '..Config.Job..r,
+                    heading = s.heading,
+                    debugPoly = Config.DebugPoly,
+                    minZ = s.coords.z - 1,
+                    maxZ = s.coords.z + 1,
+                    }, {
+                        options = {
+                            {
+                                type = 'server',
+                                event = 'QBCore:ToggleDuty',
+                                icon = s.info.icon,
+                                label = s.info.label,
+                                job = Config.Job
+                            },
+                        },
+                    distance = 2.0
+                })
+            end
+
+            table.insert(DutyZones, zonesTable)
+
         end
     end
 end
@@ -114,11 +140,11 @@ local function CreateBusinessBlip()
     EndTextCommandSetBlipName(businessBlip)
 end
 
-RegisterNetEvent('rs-'..Config.Job..':client:MakeFood', function(data)
+RegisterNetEvent('rs-'..Config.Job..':client:MakeItem', function(data)
     local Item = data.item
     local Required = data.required
     local ItemID = data.itemID
-    local Emote = data.emote
+    local Emote = data.craftemote
 
     QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:HasItems', function(hasItems)
         if hasItems then
@@ -149,43 +175,6 @@ RegisterNetEvent('rs-'..Config.Job..':client:MakeFood', function(data)
             QBCore.Functions.Notify('You don\'t have the required items!', 'error', 5000)
         end
     end, Config.Food[ItemID].Required)
-end)
-
-RegisterNetEvent('rs-'..Config.Job..':client:MakeDrink', function(data)
-    local Item = data.item
-    local Required = data.required
-    local ItemID = data.itemID
-    local Emote = data.emote
-
-    QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:HasItems', function(hasItems)
-        if hasItems then
-            TriggerEvent('animations:client:EmoteCommandStart', {Emote})
-            exports['ps-ui']:Circle(function(success)
-                if success then
-                    QBCore.Functions.Progressbar('business_drink', 'Making a '..sharedItems[Item].label, (Config.Times.Drinks * 1000), false, true, {
-                        disableMovement = true,
-                        disableCarMovement = true,
-                        disableMouse = false,
-                        disableCombat = true,
-                    }, {}, {}, {}, function()
-                        ClearPedTasks(PlayerPedId())
-                        QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:GetItem', function(isMade)
-                            if isMade then
-                                QBCore.Functions.Notify('You made a '..sharedItems[Item].label..'!', 'success', 5000)
-                            end
-                        end, Item, Required)
-                    end, function()
-                        ClearPedTasks(PlayerPedId())
-                        QBCore.Functions.Notify('Canceled...', 'error', 2000)
-                    end)
-                else
-                    QBCore.Functions.Notify('Nice, you spilled the drink. Make another!', 'error', 5000)
-                end
-            end, Config.Minigame.Circles, Config.Minigame.Time)
-        else
-            QBCore.Functions.Notify('You don\'t have the required items!', 'error', 5000)
-        end
-    end, Config.Drinks[ItemID].Required)
 end)
 
 -- PLAYER LOAD / UNLOAD --
