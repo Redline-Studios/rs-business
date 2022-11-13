@@ -2,11 +2,11 @@ QBCore = exports['qb-core']:GetCoreObject()
 sharedItems = QBCore.Shared.Items
 local Player = QBCore.Functions.GetPlayerData()
 local PlayerJob = QBCore.Functions.GetPlayerData().job
-local onDuty = QBCore.Functions.GetPlayerData().job.onDuty
+local onDuty = false
 local zonesTable = {} -- Table for target zones
 
 -- FUNCTIONS --
-local function ToggleDuty(bool)
+local function ToggleDuty()
     onDuty = not onDuty
     TriggerServerEvent('QBCore:ToggleDuty')
 end
@@ -206,15 +206,11 @@ local function CreateDutyZones()
         InstallZones:onPlayerInOut(function(isPointInside)
             if isPointInside then
                 if PlayerJob.name == Config.Job then
-                    if not onDuty then
-                        ToggleDuty(true)
-                    end
+                    ToggleDuty()
                 end
             else
                 if PlayerJob.name == Config.Job then
-                    if onDuty then
-                        ToggleDuty(false)
-                    end
+                    ToggleDuty()
                 end
             end
         end)
@@ -276,11 +272,21 @@ RegisterNetEvent('rs-'..Config.Job..':client:MakeItem', function(data)
     end, Config.Food[ItemID].Required)
 end)
 
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
+    if JobInfo.name == Config.Job and PlayerJob.name ~= Config.Job then
+        if JobInfo.onduty then
+            TriggerServerEvent("QBCore:ToggleDuty")
+            onDuty = false
+        end
+    end
+    PlayerJob = JobInfo
+end)
+
 -- PLAYER LOAD / UNLOAD --
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     Player = QBCore.Functions.GetPlayerData()
     PlayerJob = QBCore.Functions.GetPlayerData().job
-    onDuty = QBCore.Functions.GetPlayerData().job.onDuty
+    onDuty = PlayerJob.onduty
 
     CreateBusinessZones()
     CreateBusinessBlip()
@@ -289,7 +295,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     end
 end)
 
-RegisterNetEvent('QBCore:Client:OnPlayerUnloaded', function()
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     DestroyBusinessZones()
     RemoveBusinessBlips()
 end)
