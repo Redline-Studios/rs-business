@@ -18,7 +18,7 @@ Simple script for creating any business
 - Set all target icons and titles from the config
 - Set all stash and tray max slots & max weight from the config
 - Set progressbar times from the config
-- All items are automatically made into useable items with cutsomizeable effect lengths and strengths
+- All items are automatically made into useable items with customizeable effect lengths and strengths
     - Set effects for alcohol
     - Set effects for coffee
     - Set how much hunger and thirst items add for every item from the config
