@@ -18,7 +18,7 @@ Config.Minigame = {
 }
 
 -- BUSINESS CONFIGS --
-Config.Job = 'beanmachine' -- Name of the job in 'qb-core > shared > jobs.lua'
+Config.Job = 'hotdog' -- Name of the job in 'qb-core > shared > jobs.lua'
 Config.Business = {
     Name = 'Bean Machine', -- Blip Name / Business Name
     AutoDuty = true, -- Players on/off duty auto changes when entering/leaving the polyzone
@@ -33,13 +33,17 @@ Config.Business = {
 
     -- For on/off duty when enetering the business (Only used if AutoDuty = true)
     BusinessPoly = {
-        minZ = 28,
-        maxZ = 31,
-        zone = {
-            vector2(112.20778656006, -1045.7586669922),
-            vector2(119.12358093262, -1026.5433349609),
-            vector2(128.96510314941, -1029.9719238281),
-            vector2(121.7850112915, -1049.6458740234)
+        Zones = {
+            [1] = {
+                minZ = 28,
+                maxZ = 31,
+                zone = {
+                    vector2(112.20778656006, -1045.7586669922),
+                    vector2(119.12358093262, -1026.5433349609),
+                    vector2(128.96510314941, -1029.9719238281),
+                    vector2(121.7850112915, -1049.6458740234)
+                }
+            }
         }
     },
 }

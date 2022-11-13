@@ -196,27 +196,29 @@ RegisterNetEvent('rs-'..Config.Job..'WashHands', function()
 end)
 
 local function CreateDutyZones()
-    local InstallZones = PolyZone:Create(Config.Business.BusinessPoly.zone, {
-        name = "Zone" .. Config.Job,
-        minZ = Config.Business.BusinessPoly.minZ,
-        maxZ = Config.Business.BusinessPoly.maxZ,
-        debugPoly = Config.DebugPoly
-    })
-    InstallZones:onPlayerInOut(function(isPointInside)
-        if isPointInside then
-            if PlayerJob.name == Config.Job then
-                if not onDuty then
-                    ToggleDuty(true)
+    for k,v in pairs(Config.Business.BusinessPoly.Zones) do
+        local InstallZones = PolyZone:Create(v.zone, {
+            name = "Zone" .. Config.Job..k,
+            minZ = v.minZ,
+            maxZ = v.maxZ,
+            debugPoly = Config.DebugPoly
+        })
+        InstallZones:onPlayerInOut(function(isPointInside)
+            if isPointInside then
+                if PlayerJob.name == Config.Job then
+                    if not onDuty then
+                        ToggleDuty(true)
+                    end
+                end
+            else
+                if PlayerJob.name == Config.Job then
+                    if onDuty then
+                        ToggleDuty(false)
+                    end
                 end
             end
-        else
-            if PlayerJob.name == Config.Job then
-                if onDuty then
-                    ToggleDuty(false)
-                end
-            end
-        end
-    end)
+        end)
+    end
 end
 
 local function RemoveBusinessBlips()
