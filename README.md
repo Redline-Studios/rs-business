@@ -31,3 +31,8 @@ Simple script for creating any business
 - Modify the config to the business you are setting up
 - Create your OWN custom items and add them to any of the tables for food/drink crafting
 - Add those items to your `qb-core > shared > items.lua`, they will automatically be made useable in this script
+
+#### Credits:
+**Original v1.0 Write:** xThrasherrr#6666
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/thrasherrr)
