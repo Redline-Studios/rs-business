@@ -3,8 +3,7 @@ sharedItems = QBCore.Shared.Items
 local Player = QBCore.Functions.GetPlayerData()
 local PlayerJob = QBCore.Functions.GetPlayerData().job
 local onDuty = QBCore.Functions.GetPlayerData().job.onDuty
-local ZonesCreated = false
-local zonesTable = {} -- Table for food target zones
+local zonesTable = {} -- Table for target zones
 
 -- FUNCTIONS --
 local function ToggleDuty(bool)
@@ -20,7 +19,7 @@ end
 
 local function CreateBusinessZones()
     for k, v in pairs(Config.Locations) do
-        if k ~= 'Registers' and k ~= 'Duty' then
+        if k ~= 'Registers' and k ~= 'Duty' and k ~= 'Stashes' and k ~= 'Trays' and k ~= 'Sink' then
             for r, s in pairs(Config.Locations[k]) do
                 BusinessZone = exports['qb-target']:AddBoxZone(Config.Job..k..r, s.coords, s.length, s.width, {
                     name = Config.Job..k..r,
@@ -91,35 +90,133 @@ local function CreateBusinessZones()
 
             table.insert(DutyZones, zonesTable)
 
+        elseif k == 'Stashes' then
+            for r, s in pairs(Config.Locations['Stashes']) do
+                StashZones = exports['qb-target']:AddBoxZone('Stash '..Config.Job..r, s.coords, s.length, s.width, {
+                    name = 'Stash '..Config.Job..r,
+                    heading = s.heading,
+                    debugPoly = Config.DebugPoly,
+                    minZ = s.coords.z - 1,
+                    maxZ = s.coords.z + 1,
+                    }, {
+                        options = {
+                            {
+                                action = function()
+                                    TriggerEvent('rs-'..Config.Job..':OpenStash', r)
+                                end,
+                                icon = s.info.icon,
+                                label = s.info.label,
+                                job = Config.Job
+                            },
+                        },
+                    distance = 2.0
+                })
+            end
+
+            table.insert(StashZones, zonesTable)
+
+        elseif k == 'Trays' then
+            for r, s in pairs(Config.Locations['Trays']) do
+                CounterZones = exports['qb-target']:AddBoxZone('Tray '..Config.Job..r, s.coords, s.length, s.width, {
+                    name = 'Tray '..Config.Job..r,
+                    heading = s.heading,
+                    debugPoly = Config.DebugPoly,
+                    minZ = s.coords.z - 1,
+                    maxZ = s.coords.z + 1,
+                    }, {
+                        options = {
+                            {
+                                action = function()
+                                    TriggerEvent('rs-'..Config.Job..':OpenTray', r)
+                                end,
+                                icon = s.info.icon,
+                                label = s.info.label,
+                            },
+                        },
+                    distance = 2.0
+                })
+            end
+
+            table.insert(CounterZones, zonesTable)
+
+        elseif k == 'Sink' then
+            for r, s in pairs(Config.Locations['Sink']) do
+                SinkZones = exports['qb-target']:AddBoxZone('Sink '..Config.Job..r, s.coords, s.length, s.width, {
+                    name = 'Sink '..Config.Job..r,
+                    heading = s.heading,
+                    debugPoly = Config.DebugPoly,
+                    minZ = s.coords.z - 1,
+                    maxZ = s.coords.z + 1,
+                    }, {
+                        options = {
+                            {
+                                type = 'client',
+                                event = 'rs-'..Config.Job..'WashHands',
+                                icon = s.info.icon,
+                                label = s.info.label,
+                                job = Config.Job
+                            },
+                        },
+                    distance = 2.0
+                })
+            end
+
+            table.insert(SinkZones, zonesTable)
         end
     end
 end
 
+RegisterNetEvent('rs-'..Config.Job..':OpenTray', function(stashID)
+    print('BusinessTray_'..Config.Job..'_'..stashID)
+    TriggerServerEvent("inventory:server:OpenInventory", "stash", 'BusinessTray_'..Config.Job..'_'..stashID, {maxweight = Config.Trays.MaxWeight, slots = Config.Trays.MaxSlots})
+    TriggerEvent("inventory:client:SetCurrentStash", 'BusinessTray_'..Config.Job..'_'..stashID)
+end)
+
+RegisterNetEvent('rs-'..Config.Job..':OpenStash', function(stashID)
+    print('BusinessStash_'..Config.Job..stashID)
+    TriggerServerEvent("inventory:server:OpenInventory", "stash", 'BusinessStash_'..Config.Job..'_'..stashID, {maxweight = Config.Stashes.MaxWeight, slots = Config.Stashes.MaxSlots})
+    TriggerEvent("inventory:client:SetCurrentStash", 'BusinessStash_'..Config.Job..'_'..stashID)
+end)
+
+RegisterNetEvent('rs-'..Config.Job..'WashHands', function()
+    QBCore.Functions.Progressbar("wash_hands", 'Washing your hands...', (Config.Times.WashHands * 1000), false, true, {
+		disableMovement = true,
+		disableCarMovement = false,
+		disableMouse = false,
+		disableCombat = true,
+	}, {
+		animDict = "mp_arresting",
+		anim = "a_uncuff",
+		flags = 49,
+	}, {}, {}, function()
+        QBCore.Functions.Notify('You washed your hands!', 'success', 5000)
+	end, function()
+		QBCore.Functions.Notify("Canceled...", "error")
+	end)
+end)
+
 local function CreateDutyZones()
-    if not ZonesCreated then
-        local InstallZones = PolyZone:Create(Config.Business.BusinessPoly.zone, {
-            name = "Zone" .. Config.Job,
-            minZ = Config.Business.BusinessPoly.minZ,
-            maxZ = Config.Business.BusinessPoly.maxZ,
-            debugPoly = Config.DebugPoly
-        })
-        InstallZones:onPlayerInOut(function(isPointInside)
-            if isPointInside then
-                if PlayerJob.name == Config.Job then
-                    if not onDuty then
-                        ToggleDuty(true)
-                    end
-                end
-            else
-                if PlayerJob.name == Config.Job then
-                    if onDuty then
-                        ToggleDuty(false)
-                    end
+    local InstallZones = PolyZone:Create(Config.Business.BusinessPoly.zone, {
+        name = "Zone" .. Config.Job,
+        minZ = Config.Business.BusinessPoly.minZ,
+        maxZ = Config.Business.BusinessPoly.maxZ,
+        debugPoly = Config.DebugPoly
+    })
+    InstallZones:onPlayerInOut(function(isPointInside)
+        if isPointInside then
+            if PlayerJob.name == Config.Job then
+                if not onDuty then
+                    ToggleDuty(true)
                 end
             end
-        end)
-        ZonesCreated = true
-    end
+        else
+            if PlayerJob.name == Config.Job then
+                if onDuty then
+                    ToggleDuty(false)
+                end
+            end
+        end
+    end)
 end
 
 local function RemoveBusinessBlips()

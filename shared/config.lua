@@ -7,7 +7,8 @@ Config.DebugPoly = true -- Debug Polyzones
 -- PROGRESSBAR CONFIGS --
 Config.Times = { -- Time to make items (Set in seconds)
     Food = 5,
-    Drinks = 5
+    Drinks = 5,
+    WashHands = 5
 }
 
 -- MINIGAME CONFIG --
@@ -44,7 +45,7 @@ Config.Business = {
 }
 
 Config.Locations = {
-    ['Registers'] = {
+    ['Registers'] = { -- Cash Register Locations
         [1] = {
             coords = vector3(120.76, -1040.11, 29.28),
             heading = 340,
@@ -68,7 +69,7 @@ Config.Locations = {
             }
         }
     },
-    ['Duty'] = {
+    ['Duty'] = { -- On / Off Duty Locations
         [1] = {
             coords = vector3(126.39, -1034.39, 29.28),
             heading = 340,
@@ -80,7 +81,53 @@ Config.Locations = {
             }
         }
     },
-    ['Food'] = {
+    ['Stashes'] = { -- Stash Locations
+        [1] = {
+            coords = vector3(120.54, -1043.94, 29.28),
+            heading = 340,
+            width = 0.8,
+            length = 1.0,
+            info = {
+                label = 'Stash',
+                icon = 'fas fa-box',
+            }
+        }
+    },
+    ['Trays'] = { -- Locations for Trays (Give Food to Customers)
+        [1] = {
+            coords = vector3(120.66, -1040.78, 29.28),
+            heading = 340,
+            width = 0.6,
+            length = 1,
+            info = {
+                label = 'Tray',
+                icon = 'fas fa-box',
+            }
+        },
+        [2] = {
+            coords = vector3(122.0, -1037.14, 29.28),
+            heading = 340,
+            width = 0.6,
+            length = 1,
+            info = {
+                label = 'Tray',
+                icon = 'fas fa-box',
+            }
+        }
+    },
+    ['Sink'] = { -- Sink Locations
+        [1] = {
+            coords = vector3(123.73, -1039.27, 29.28),
+            heading = 340,
+            width = 1.6,
+            length = 1.0,
+            info = {
+                label = 'Wash Hands',
+                icon = 'fas fa-soap',
+            }
+        }
+    },
+    ['Food'] = { -- Make Food Locations
         [1] = {
             coords = vector3(121.53, -1038.43, 29.28),
             heading = 339,
@@ -92,7 +139,7 @@ Config.Locations = {
             }
         }
     },
-    ['Drinks'] = {
+    ['Drinks'] = { -- Make Drink Locations
         [1] = {
             coords = vector3(126.08, -1036.56, 29.28),
             heading = 249,
@@ -104,7 +151,7 @@ Config.Locations = {
             }
         }
     },
-    ['Coffee'] = {
+    ['Coffee'] = { -- Make Coffee Locations
         [1] = {
             coords = vector3(122.84, -1041.62, 29.28),
             heading = 251,
@@ -116,7 +163,7 @@ Config.Locations = {
             }
         }
     },
-    ['Alcohol'] = {
+    ['Alcohol'] = { -- Make Alcohol Locations
         [1] = {
             coords = vector3(0,0,0),
             heading = 0,
@@ -128,6 +175,18 @@ Config.Locations = {
             }
         }
     },
+}
+
+-- STASH CONFIG --
+Config.Stashes = {
+    MaxSlots = 10,
+    MaxWeight = 2000
+}
+
+-- TRAY CONFIG --
+Config.Trays = {
+    MaxSlots = 10,
+    MaxWeight = 2000
 }
 
 -- FOOD CONFIG --
