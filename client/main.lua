@@ -289,7 +289,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     end
 end)
 
-RegisterNetEvent('QBCore:Client:OnPlayerUnloaded', function()
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     DestroyBusinessZones()
     RemoveBusinessBlips()
 end)
