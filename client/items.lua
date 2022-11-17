@@ -50,7 +50,7 @@ RegisterNetEvent("rs-"..Config.Job..":client:Eat", function(item, emote, time, h
             TriggerEvent('animations:client:EmoteCommandStart', {'c'})
             QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:UseItem', function(hasEaten)
                 if hasEaten then
-                    TriggerServerEvent("QBCore:Server:SetMetaData", "hunger", QBCore.Functions.GetPlayerData().metadata["hunger"] + hunger)
+                    TriggerServerEvent('rs-'..Config.Job..':server:addHunger', QBCore.Functions.GetPlayerData().metadata["hunger"] + hunger)
                     QBCore.Functions.Notify('You ate a '..sharedItems[item].label..'!', 'success', 5000)
                 end
             end, item)
@@ -76,7 +76,7 @@ RegisterNetEvent("rs-"..Config.Job..":client:Drink", function(item, emote, time,
             TriggerEvent('animations:client:EmoteCommandStart', {'c'})
             QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:UseItem', function(hasDrank)
                 if hasDrank then
-                    TriggerServerEvent("QBCore:Server:SetMetaData", "thirst", QBCore.Functions.GetPlayerData().metadata["thirst"] + thirst)
+                    TriggerServerEvent('rs-'..Config.Job..':server:addThirst', QBCore.Functions.GetPlayerData().metadata["thirst"] + thirst)
                     QBCore.Functions.Notify('You drank a '..sharedItems[item].label..'!', 'success', 5000)
                 end
             end, item)
@@ -101,9 +101,9 @@ RegisterNetEvent("rs-"..Config.Job..":client:DrinkAlcohol", function(item, emote
             disableCombat = true,
         }, {}, {}, {}, function()
             TriggerEvent('animations:client:EmoteCommandStart', {'c'})
-            QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:UseItem', function(hasEaten)
-                if hasEaten then
-                    TriggerServerEvent("QBCore:Server:SetMetaData", "thirst", QBCore.Functions.GetPlayerData().metadata["thirst"] + thirst)
+            QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:UseItem', function(hasDrank)
+                if hasDrank then
+                    TriggerServerEvent('rs-'..Config.Job..':server:addThirst', QBCore.Functions.GetPlayerData().metadata["thirst"] + thirst)
                     QBCore.Functions.Notify('You drank a '..sharedItems[item].label..'!', 'success', 5000)
                     if item == 'beer' then
                         beerCount = beerCount + 1
@@ -151,9 +151,9 @@ RegisterNetEvent("rs-"..Config.Job..":client:DrinkCoffee", function(item, emote,
             disableCombat = true,
         }, {}, {}, {}, function()
             TriggerEvent('animations:client:EmoteCommandStart', {'c'})
-            QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:UseItem', function(hasEaten)
-                if hasEaten then
-                    TriggerServerEvent("QBCore:Server:SetMetaData", "thirst", QBCore.Functions.GetPlayerData().metadata["thirst"] + thirst)
+            QBCore.Functions.TriggerCallback('rs-'..Config.Job..':server:UseItem', function(hasDrank)
+                if hasDrank then
+                    TriggerServerEvent('rs-'..Config.Job..':server:addThirst', QBCore.Functions.GetPlayerData().metadata["thirst"] + thirst)
                     QBCore.Functions.Notify('You drank a '..sharedItems[item].label..'!', 'success', 5000)
                     DrinkCoffee()
                 end

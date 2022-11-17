@@ -15,6 +15,24 @@ QBCore.Functions.CreateCallback('rs-'..Config.Job..':server:UseItem',function(so
     cb(callback)
 end)
 
+RegisterNetEvent('rs-'..Config.Job..':server:addThirst', function(amount)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
+
+    Player.Functions.SetMetaData('thirst', amount)
+    TriggerClientEvent('hud:client:UpdateNeeds', src, Player.PlayerData.metadata.thirst, amount)
+end)
+
+RegisterNetEvent('rs-'..Config.Job..':server:addHunger', function(amount)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
+
+    Player.Functions.SetMetaData('hunger', amount)
+    TriggerClientEvent('hud:client:UpdateNeeds', src, Player.PlayerData.metadata.hunger, amount)
+end)
+
 -- FOOD ITEMS --
 for k,v in pairs(Config.Food) do
     QBCore.Functions.CreateUseableItem(v.Item, function(source)
